@@ -1,4 +1,5 @@
 name: "Scheduling"
+run-name: "Scheduling (${{ github.ref_name }})"
 
 on:
   workflow_run:
@@ -20,6 +21,7 @@ jobs:
         uses: actions/github-script@v6
         #if: ${{ github.event.workflow_run.head_branch == 'yet-another-branch' }}
         with:
+          github-token: ${{ secrets.XREPO_ACTIONS_TOKEN }}
           script: |
             const branchesToService = ["main", "release"];
 
