@@ -1,0 +1,34 @@
+name: Test
+run-name: "Test (${{ github.ref_name }})"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        type: string
+
+jobs:
+  workload:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v6
+      with:
+        result-encoding: string
+        script: |
+          const checkRunSha = "${{ github.sha }}";
+
+          const createCheckRunResponse =
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: 'in_progress',
+              name: "build-checks:test:main",
+              head_sha: checkRunSha
+            });
+
+          const checkRun = createCheckRunResponse.data;
+
+          console.log(
+            `an new checkrun #${checkRun.id} was inserted: https://github.com/razzmatazz/gh-actions-playground/runs/${checkRun.id}`);
+
+          return checkRun.id
