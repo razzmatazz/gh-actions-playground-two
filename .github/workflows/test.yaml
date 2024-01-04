@@ -11,7 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-    - run: exit 1
+    - uses: actions/checkout@v4
+
+    - uses: ./.github/actions/failing
+
+    - run: echo "job.status=${{ job.status }}"
 
     - if: ${{ failure() }}
       run: echo "failure"
