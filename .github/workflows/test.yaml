@@ -19,4 +19,8 @@ jobs:
       - workload-succeeding
       - workload-failing
     steps:
-    - run: echo hi!
+      - if: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')  }}
+        run: echo "success!"
+
+      - if: ${{ contains(needs.*.result, 'failure') }}
+        run: echo "failure!"
