@@ -8,27 +8,20 @@ on:
         type: string
 
 jobs:
-  workload:
+  workload-succeeding:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/github-script@v6
-      with:
-        result-encoding: string
-        script: |
-          const checkRunSha = "${{ github.sha }}";
+    - run: exit 0
 
-          const createCheckRunResponse =
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              status: 'in_progress',
-              name: "build-checks:test:main",
-              head_sha: checkRunSha
-            });
+  workload-failing:
+    runs-on: ubuntu-latest
+    steps:
+    - run: exit 0
 
-          const checkRun = createCheckRunResponse.data;
-
-          console.log(
-            `an new checkrun #${checkRun.id} was inserted: https://github.com/razzmatazz/gh-actions-playground/runs/${checkRun.id}`);
-
-          return checkRun.id
+  aggregation:
+    runs-on: ubuntu-latest
+    needs:
+      - workload-succeeding
+      - workload-failing
+    steps:
+    - run: echo hi!
