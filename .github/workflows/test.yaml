@@ -9,11 +9,17 @@ jobs:
 
   workload-failing:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
     - run: exit 1
 
+    - if: ${{ failure() }}
+      run: echo "failure"
+
+    - if: ${{ success() }}
+      run: echo "success"
+
   aggregation:
-    if: always()
     runs-on: ubuntu-latest
     needs:
       - workload-succeeding
