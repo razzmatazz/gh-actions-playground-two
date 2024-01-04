@@ -24,3 +24,6 @@ jobs:
 
       - if: ${{ contains(needs.*.result, 'failure') }}
         run: echo "failure!"
+
+      - run: echo "failing result ${{ needs.workload-failing.result }}"
+      - run: echo "succeeding result ${{ needs.workload-succeeding.result }}"
